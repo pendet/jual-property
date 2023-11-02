@@ -11,12 +11,18 @@ else
     echo "env file exists."
 fi
 
-php artisan migrate
-php artisan key:generate
-php artisan cache:clear
-php artisan config:clear
-php artisan route:clear
+role=${CONTAINER_ROLE:-app}
 
-php artisan serve --port=$PORT --host=0.0.0.0 --env=.env
-exec docker-php-entrypoint "$@"
+if [ "$role" = "app" ]; then
+    echo "role app starting"
+    php artisan db:create jualproperty
+    php artisan migrate
+    php artisan key:generate
+    php artisan cache:clear
+    php artisan config:clear
+    php artisan route:clear
 
+    php artisan serve --port=$PORT --host=0.0.0.0 --env=.env
+    exec docker-php-entrypoint "$@"
+
+fi

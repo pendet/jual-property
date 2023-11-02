@@ -7,10 +7,11 @@ COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr
 
 RUN install-php-extensions pdo pdo_mysql bcmath mbstring exif pcntl bcmath gd
 
+WORKDIR /var/www
+COPY . .
+
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-WORKDIR /var/www
 
 ENV PORT=8000
 ENTRYPOINT [ "docker/entrypoint.sh" ]
